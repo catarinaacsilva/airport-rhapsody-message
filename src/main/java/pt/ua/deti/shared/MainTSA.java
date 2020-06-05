@@ -5,7 +5,6 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,31 +12,31 @@ import pt.ua.deti.common.Bag;
 import pt.ua.deti.common.MessageReply;
 import pt.ua.deti.common.MessageRequest;
 import pt.ua.deti.common.Utils;
-import pt.ua.deti.shared.imp.PlaneHold;
+import pt.ua.deti.shared.imp.TemporaryStorageArea;
 import pt.ua.deti.shared.remote.GRIRemote;
 import pt.ua.deti.shared.stubs.GRIInterface;
-import pt.ua.deti.shared.stubs.PHInterface;
+import pt.ua.deti.shared.stubs.TSAInterface;
 
 /**
- * {@link PlaneHold} Server.
+ * {@link } Server.
  * 
  * @author Catarina Silva
  * @author Duarte Dias
  * @version 1.0
  */
-public class MainPH {
+public class MainTSA {
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
         // Server port
-        final int port = Integer.parseInt(prop.getProperty("ph_port"));
+        final int port = Integer.parseInt(prop.getProperty("tsa_port"));
         // GRI Remote
         final String gri_host = prop.getProperty("gri_host");
         final int gri_port = Integer.parseInt(prop.getProperty("gri_port"));
 
         // Create the Shared Region
         final GRIInterface gri = new GRIRemote(gri_host, gri_port);
-        final PHInterface ph = new PlaneHold(gri);
+        final TSAInterface tsa = new TemporaryStorageArea(gri);
 
         // Stopping criteria
         final AtomicInteger done = new AtomicInteger(0);
@@ -50,7 +49,7 @@ public class MainPH {
             // Serve all the clients (Porter)
             while (done.get() < 1) {
                 try {
-                    final Handler handler = new Handler(serverSocket.accept(), ph, done);
+                    final Handler handler = new Handler(serverSocket.accept(), tsa, done);
                     final Thread thread = new Thread(handler);
                     thread.start();
                 } catch(SocketTimeoutException e) {
@@ -71,16 +70,16 @@ public class MainPH {
      */
     static class Handler implements Runnable {
         private final Socket socket;
-        private final PHInterface ph;
+        private final TSAInterface tsa;
         private final AtomicInteger done;
 
         /**
          * 
          * @param socket
          */
-        Handler(final Socket socket, final PHInterface ph, final AtomicInteger done) {
+        Handler(final Socket socket, final TSAInterface tsa, final AtomicInteger done) {
             this.socket = socket;
-            this.ph = ph;
+            this.tsa = tsa;
             this.done = done;
         }
 
@@ -97,25 +96,15 @@ public class MainPH {
 
                 // Check the message type and execute the corresponding method
                 switch (request.type) {
-                    case "ph_close":
+                    case "tsa_close":
                         // Instead of closing the log it marks the task as done
                         done.incrementAndGet();
                         reply = new MessageReply(request.type);
                         break;
-                    case "ph_loadBags":
-                        List<Bag> bags = Utils.cast(request.argObj);
-                        boolean lastPlane = request.argBool;
-                        ph.loadBags(bags, lastPlane);
+                    case "tsa_storeBag":
+                        Bag bag = Utils.cast(request.argObj);
+                        tsa.storeBag(bag);
                         reply = new MessageReply(request.type);
-                        break;
-                    case "ph_getBag":
-                        reply = new MessageReply(request.type, 0, ph.getBag());
-                        break;
-                    case "ph_hasBags":
-                        reply = new MessageReply(request.type, ph.hasBags());
-                        break;
-                    case "ph_lastPlane":
-                        reply = new MessageReply(request.type, ph.lastPlane());
                         break;
                     default:
                         reply = new MessageReply(request.type, -1, "unknown method");

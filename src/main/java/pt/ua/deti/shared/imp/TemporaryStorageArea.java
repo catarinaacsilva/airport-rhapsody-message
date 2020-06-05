@@ -1,5 +1,6 @@
 package pt.ua.deti.shared.imp;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -7,6 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import pt.ua.deti.common.Bag;
 import pt.ua.deti.shared.stubs.GRIInterface;
+import pt.ua.deti.shared.stubs.TSAInterface;
 
 /**
  * Temporary Storage Area.
@@ -15,7 +17,7 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * @author Duarte Dias
  * @version 1.0
  */
-public class TemporaryStorageArea {
+public class TemporaryStorageArea implements TSAInterface {
     /** {@link List} of bags from the passengers */
     private final List<Bag> bags = new ArrayList<>();
     /** {@link Lock} used by the entities to change the internal state */
@@ -25,17 +27,14 @@ public class TemporaryStorageArea {
 
     /**
      * Create a Temporary Storage Area.
+     * 
      * @param gri {@link GRIInterface}
      */
     public TemporaryStorageArea(final GRIInterface gri) {
         this.gri = gri;
     }
 
-    /**
-     * Method used by the porter to store bags in the Temporary Storage Area.
-     * 
-     * @param b {@link pt.ua.deti.common.Bag} carry be the {@link pt.ua.deti.entities.Porter}
-     */
+    @Override
     public void storeBag(final Bag b) {
         lock.lock();
         try {
@@ -44,5 +43,10 @@ public class TemporaryStorageArea {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        // Used for the remote version
     }
 }

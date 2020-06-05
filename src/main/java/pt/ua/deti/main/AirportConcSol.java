@@ -19,11 +19,12 @@ import pt.ua.deti.shared.imp.BaggageCollectionPoint;
 import pt.ua.deti.shared.imp.BaggageReclaimOffice;
 import pt.ua.deti.shared.imp.DepartureTerminalEntrance;
 import pt.ua.deti.shared.imp.DepartureTerminalTransferQuay;
-import pt.ua.deti.shared.imp.TemporaryStorageArea;
 import pt.ua.deti.shared.remote.GRIRemote;
 import pt.ua.deti.shared.remote.PHRemote;
+import pt.ua.deti.shared.remote.TSARemote;
 import pt.ua.deti.shared.stubs.GRIInterface;
 import pt.ua.deti.shared.stubs.PHInterface;
+import pt.ua.deti.shared.stubs.TSAInterface;
 
 
 /**
@@ -55,20 +56,25 @@ public class AirportConcSol {
         final String gri_host = prop.getProperty("gri_host");
         final int gri_port = Integer.parseInt(prop.getProperty("gri_port"));
 
-        //PH Remote
+        // PH Remote
         final String ph_host = prop.getProperty("ph_host");
         final int ph_port = Integer.parseInt(prop.getProperty("ph_port"));
+
+        // TSA Remote
+        final String tsa_host = prop.getProperty("tsa_host");
+        final int tsa_port = Integer.parseInt(prop.getProperty("tsa_port"));
 
         // Create the Information Sharing Regions
         // Remote
         final GRIInterface gri = new GRIRemote(gri_host, gri_port);
         final PHInterface ph = new PHRemote(ph_host, ph_port);
+        final TSAInterface tsa = new TSARemote(tsa_host, tsa_port);
 
         // Local
         final ArrivalLounge al = new ArrivalLounge(N);
         final BaggageCollectionPoint bcp = new BaggageCollectionPoint(gri);
         final BaggageReclaimOffice bro = new BaggageReclaimOffice();
-        final TemporaryStorageArea tsa = new TemporaryStorageArea(gri);
+        
         final ArrivalTerminalExit ate = new ArrivalTerminalExit(N);
         final DepartureTerminalEntrance dte = new DepartureTerminalEntrance(N);
         final ArrivalTerminalTransferQuay attq = new ArrivalTerminalTransferQuay(N, T, D, gri);

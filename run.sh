@@ -23,7 +23,7 @@ mvn -q clean compile
 # Run the simulation 10 times
 for i in $(seq 1 10)
 do
-  echo -e "\nRun n.? " $i
+  echo -e "\nRun n. " $i
   echo -e "Start GRI"
   mvn -q exec:java -Dexec.mainClass="pt.ua.deti.shared.MainGRI" &
   pids[0]=$!
@@ -34,9 +34,14 @@ do
   pids[1]=$!
   sleep 1
 
+  echo -e "Start TSA"
+  mvn -q exec:java -Dexec.mainClass="pt.ua.deti.shared.MainTSA" &
+  pids[2]=$!
+  sleep 1
+
   echo -e "Start Old Simulation"
   mvn -q exec:java -Dexec.mainClass="pt.ua.deti.main.AirportConcSol" &
-  pids[2]=$!
+  pids[3]=$!
   sleep 1
 
   # wait for all pids

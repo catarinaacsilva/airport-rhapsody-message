@@ -46,7 +46,7 @@ public class MainGRI {
             // Write initial line of the log
             gri.writeHeader();
 
-            // Serve all the clients
+            // Serve all the clients (Porter, Bus Driver, Passengers)
             while (done.get() < 3) {
                 try {
                     final ClientHandler clientHandler = new ClientHandler(serverSocket.accept(), gri, done);

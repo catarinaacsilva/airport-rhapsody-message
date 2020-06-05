@@ -3,7 +3,7 @@ package pt.ua.deti.entities;
 import pt.ua.deti.common.Bag;
 import pt.ua.deti.shared.imp.ArrivalLounge;
 import pt.ua.deti.shared.imp.BaggageCollectionPoint;
-import pt.ua.deti.shared.imp.TemporaryStorageArea;
+import pt.ua.deti.shared.stubs.TSAInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
 import pt.ua.deti.shared.stubs.PHInterface;
 
@@ -32,8 +32,8 @@ public class Porter implements Runnable {
     private final PHInterface ph;
     /** {@link BaggageCollectionPoint} */
     private final BaggageCollectionPoint bcp;
-    /** {@link TemporaryStorageArea} */
-    private final TemporaryStorageArea tsa;
+    /** {@link TSAInterface} */
+    private final TSAInterface tsa;
     /** Temporary storage to move {@link pt.ua.deti.common.Bag} */
     private Bag temp = null;
     /** Flag used to indicate if the life cycle is done */
@@ -49,7 +49,7 @@ public class Porter implements Runnable {
      * @param gri {@link GeneralRepositoryInformation}
      */
     public Porter(final ArrivalLounge al, final PHInterface ph, final BaggageCollectionPoint bcp,
-            final TemporaryStorageArea tsa, final GRIInterface gri) {
+            final TSAInterface tsa, final GRIInterface gri) {
         this.state = State.WAITING_FOR_A_PLANE_TO_LAND;
         this.al = al;
         this.ph = ph;
@@ -85,8 +85,9 @@ public class Porter implements Runnable {
         }
 
         try {
-            gri.close();
             ph.close();
+            tsa.close();
+            gri.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
