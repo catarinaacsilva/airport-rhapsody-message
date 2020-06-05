@@ -39,6 +39,11 @@ do
   pids[2]=$!
   sleep 1
 
+  echo -e "Start DTTQ"
+  mvn -q exec:java -Dexec.mainClass="pt.ua.deti.shared.MainDTTQ" &
+  pids[2]=$!
+  sleep 1
+
   echo -e "Start Old Simulation"
   mvn -q exec:java -Dexec.mainClass="pt.ua.deti.main.AirportConcSol" &
   pids[3]=$!

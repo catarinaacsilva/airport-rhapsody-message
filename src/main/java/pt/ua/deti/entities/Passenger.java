@@ -9,7 +9,7 @@ import pt.ua.deti.shared.imp.ArrivalTerminalTransferQuay;
 import pt.ua.deti.shared.imp.BaggageCollectionPoint;
 import pt.ua.deti.shared.imp.BaggageReclaimOffice;
 import pt.ua.deti.shared.imp.DepartureTerminalEntrance;
-import pt.ua.deti.shared.imp.DepartureTerminalTransferQuay;
+import pt.ua.deti.shared.stubs.DTTQInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
 
 /**
@@ -66,8 +66,8 @@ public class Passenger implements Runnable {
     private final DepartureTerminalEntrance dte;
     /** {@link ArrivalTerminalTransferQuay} */
     private final ArrivalTerminalTransferQuay attq;
-    /** {@link DepartureTerminalTransferQuay} */
-    private final DepartureTerminalTransferQuay dttq;
+    /** {@link DTTQInterface} */
+    private final DTTQInterface dttq;
     /** {@link GeneralRepositoryInformation} serves as log */
     private final GRIInterface gri;
     /** Flag used to indicate if the life cycle is done */
@@ -92,7 +92,7 @@ public class Passenger implements Runnable {
     public Passenger(final int id, final List<Integer> bagsId, final boolean transit, final ArrivalLounge al,
             final BaggageCollectionPoint bcp, final BaggageReclaimOffice bro, final ArrivalTerminalExit ate,
             final DepartureTerminalEntrance dte, final ArrivalTerminalTransferQuay attq,
-            final DepartureTerminalTransferQuay dttq, final GRIInterface gri) {
+            final DTTQInterface dttq, final GRIInterface gri) {
         this.bagsId = bagsId;
         this.id = id;
         state = State.AT_THE_DISEMBARKING_ZONE;

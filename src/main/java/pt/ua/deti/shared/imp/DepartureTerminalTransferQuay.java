@@ -1,18 +1,21 @@
 package pt.ua.deti.shared.imp;
 
+import java.io.IOException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import pt.ua.deti.shared.stubs.DTTQInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
 
 /**
- * Departure Terminal Transfer Quay
+ * Departure Terminal Transfer Quay.
  * 
  * @author Catarina Silva
  * @author Duarte Dias
  * @version 1.0
  */
-public class DepartureTerminalTransferQuay {
+public class DepartureTerminalTransferQuay implements DTTQInterface {
     /** {@link Lock} used by the entities to change the internal state */
     private final Lock lock = new ReentrantLock();
     /**
@@ -41,13 +44,9 @@ public class DepartureTerminalTransferQuay {
         this.gri = gri;
     }
 
-    /**
-     * Leave the bus.
-     * 
-     * @param id the identification from the {@link pt.ua.deti.entities.Passenger}
-     */
+    @Override
     public void leaveTheBus(final int id) {
-        
+
         lock.lock();
         try {
             while (!arrived) {
@@ -63,11 +62,7 @@ public class DepartureTerminalTransferQuay {
         }
     }
 
-    /**
-     * Park The Bus and Let {@link pt.ua.deti.entities.Passenger} off.
-     * 
-     * @param numberPassengers the current number of passenger for this trip
-     */
+    @Override
     public void parkTheBusAndLetPassOff(final int numberPassengers) {
         lock.lock();
         try {
@@ -83,5 +78,10 @@ public class DepartureTerminalTransferQuay {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        // Used for the remote version
     }
 }

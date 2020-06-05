@@ -16,7 +16,6 @@ import pt.ua.deti.shared.stubs.TSAInterface;
  * @version 1.0
  */
 public class TSARemote implements TSAInterface {
-
     /** TSA server hostname */
     private final String hostname;
     /** TSA server port */

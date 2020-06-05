@@ -2,8 +2,8 @@ package pt.ua.deti.entities;
 
 import pt.ua.deti.shared.imp.ArrivalTerminalExit;
 import pt.ua.deti.shared.imp.ArrivalTerminalTransferQuay;
-import pt.ua.deti.shared.imp.DepartureTerminalTransferQuay;
 import pt.ua.deti.shared.imp.GeneralRepositoryInformation;
+import pt.ua.deti.shared.stubs.DTTQInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
 
 /**
@@ -14,7 +14,10 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * @version 1.0
  */
 public class BusDriver implements Runnable {
-    /** States that describe the life cycle of a {@link pt.ua.deti.entities.BusDriver} */
+    /**
+     * States that describe the life cycle of a
+     * {@link pt.ua.deti.entities.BusDriver}
+     */
     protected static enum State {
         PARKING_AT_THE_ARRIVAL_TERMINAL, DRIVING_FORWARD, PARKING_AT_THE_DEPARTURE_TERMINAL, DRIVING_BACKWARD
     }
@@ -23,8 +26,8 @@ public class BusDriver implements Runnable {
     private State state;
     /** {@link ArrivalTerminalTransferQuay} */
     private final ArrivalTerminalTransferQuay attq;
-    /** {@link DepartureTerminalTransferQuay} */
-    private final DepartureTerminalTransferQuay dttq;
+    /** {@link DTTQInterface} */
+    private final DTTQInterface dttq;
     /** {@link ArrivalTerminalExit} */
     private final ArrivalTerminalExit ate;
     /** {@link GeneralRepositoryInformation} serves as log */
@@ -38,12 +41,12 @@ public class BusDriver implements Runnable {
      * Create a new {@link pt.ua.deti.entities.BusDriver}.
      * 
      * @param attq {@link ArrivalTerminalTransferQuay}
-     * @param dttq {@link DepartureTerminalTransferQuay}
+     * @param dttq {@link DTTQInterface}
      * @param ate  {@link ArrivalTerminalExit}
      * @param gri  {@link GeneralRepositoryInformation} serves as log
      */
-    public BusDriver(final ArrivalTerminalTransferQuay attq, final DepartureTerminalTransferQuay dttq,
-            final ArrivalTerminalExit ate, final GRIInterface gri) {
+    public BusDriver(final ArrivalTerminalTransferQuay attq, final DTTQInterface dttq,
+        final ArrivalTerminalExit ate, final GRIInterface gri) {
         this.attq = attq;
         this.dttq = dttq;
         this.ate = ate;
@@ -79,10 +82,11 @@ public class BusDriver implements Runnable {
                     break;
             }
         }
-        
+
         try {
+            dttq.close();
             gri.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

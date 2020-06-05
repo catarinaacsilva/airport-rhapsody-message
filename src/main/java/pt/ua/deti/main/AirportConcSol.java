@@ -18,14 +18,14 @@ import pt.ua.deti.shared.imp.ArrivalTerminalTransferQuay;
 import pt.ua.deti.shared.imp.BaggageCollectionPoint;
 import pt.ua.deti.shared.imp.BaggageReclaimOffice;
 import pt.ua.deti.shared.imp.DepartureTerminalEntrance;
-import pt.ua.deti.shared.imp.DepartureTerminalTransferQuay;
+import pt.ua.deti.shared.remote.DTTQRemote;
 import pt.ua.deti.shared.remote.GRIRemote;
 import pt.ua.deti.shared.remote.PHRemote;
 import pt.ua.deti.shared.remote.TSARemote;
+import pt.ua.deti.shared.stubs.DTTQInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
 import pt.ua.deti.shared.stubs.PHInterface;
 import pt.ua.deti.shared.stubs.TSAInterface;
-
 
 /**
  * Main execution program.
@@ -38,7 +38,7 @@ public class AirportConcSol {
     public static void main(final String[] args) throws IOException {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
-        
+
         // The number of Planes
         final int K = Integer.parseInt(prop.getProperty("K"));
         // The number of Passengers per Plane
@@ -64,11 +64,16 @@ public class AirportConcSol {
         final String tsa_host = prop.getProperty("tsa_host");
         final int tsa_port = Integer.parseInt(prop.getProperty("tsa_port"));
 
+        // DQQT Remote
+        final String dttq_host = prop.getProperty("dttq_host");
+        final int dttq_port = Integer.parseInt(prop.getProperty("dttq_port"));
+
         // Create the Information Sharing Regions
         // Remote
         final GRIInterface gri = new GRIRemote(gri_host, gri_port);
         final PHInterface ph = new PHRemote(ph_host, ph_port);
         final TSAInterface tsa = new TSARemote(tsa_host, tsa_port);
+        final DTTQInterface dttq = new DTTQRemote(dttq_host, dttq_port);
 
         // Local
         final ArrivalLounge al = new ArrivalLounge(N);
@@ -78,7 +83,7 @@ public class AirportConcSol {
         final ArrivalTerminalExit ate = new ArrivalTerminalExit(N);
         final DepartureTerminalEntrance dte = new DepartureTerminalEntrance(N);
         final ArrivalTerminalTransferQuay attq = new ArrivalTerminalTransferQuay(N, T, D, gri);
-        final DepartureTerminalTransferQuay dttq = new DepartureTerminalTransferQuay(gri);
+        
 
         ate.setDTE(dte);
         dte.setATE(ate);
@@ -141,6 +146,7 @@ public class AirportConcSol {
         }
 
         try {
+            dttq.close();
             gri.close();
         } catch(Exception e) {
             e.printStackTrace();
@@ -167,7 +173,7 @@ public class AirportConcSol {
     private static List<Plane> createPlanes(final int K, final int N, final int M, final double P,
             final GRIInterface gri, final ArrivalLounge al, final BaggageCollectionPoint bcp,
             final BaggageReclaimOffice bro, final ArrivalTerminalExit ate, final DepartureTerminalEntrance dte,
-            final ArrivalTerminalTransferQuay attq, final DepartureTerminalTransferQuay dttq) {
+            final ArrivalTerminalTransferQuay attq, final DTTQInterface dttq) {
         final ArrayList<Plane> planes = new ArrayList<>(K);
         int globalBagId = 0;
 
