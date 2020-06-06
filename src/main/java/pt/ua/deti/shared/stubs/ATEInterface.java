@@ -1,6 +1,7 @@
 package pt.ua.deti.shared.stubs;
 
 import java.io.Closeable;
+
 /**
  * Arrival Terminal Exit Interface.
  * 
@@ -10,7 +11,7 @@ import java.io.Closeable;
  */
 public interface ATEInterface extends Closeable {
     /**
-     * Reset the {@link DepartureTerminalEntrance} by setting the blocked to 0.
+     * Reset the {@link ATEInterface} by setting the blocked to 0.
      * 
      * @param last flag used to identify if is the last plane
      */

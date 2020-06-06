@@ -24,6 +24,13 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * @version 1.0
  */
 public class MainBCP {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainBCP() {
+    }
+
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -65,16 +72,20 @@ public class MainBCP {
     }
 
     /**
-     * 
+     * Handler that represent each client request.
      */
-    static class Handler implements Runnable {
+    private static class Handler implements Runnable {
         private final Socket socket;
         private final BCPInterface bcp;
         private final AtomicInteger done;
 
         /**
+         * Create a new handler.
          * 
-         * @param socket
+         * @param socket client socket used for communication
+         * @param bcp    shared memory implementation {@link BCPInterface}
+         * @param done   atomic variable used for the stopping criteria
+         *               {@link AtomicInteger}
          */
         Handler(final Socket socket, final BCPInterface bcp, final AtomicInteger done) {
             this.socket = socket;

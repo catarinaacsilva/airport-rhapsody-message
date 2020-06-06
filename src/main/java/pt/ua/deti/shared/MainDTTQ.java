@@ -24,6 +24,13 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * @version 1.0
  */
 public class MainDTTQ {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainDTTQ() {
+    }
+
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -51,30 +58,34 @@ public class MainDTTQ {
                     final Handler handler = new Handler(serverSocket.accept(), dttq, done);
                     final Thread thread = new Thread(handler);
                     thread.start();
-                } catch(SocketTimeoutException e) {
-                    //ignore, used to check the stopping criteria
+                } catch (SocketTimeoutException e) {
+                    // ignore, used to check the stopping criteria
                 }
             }
 
             // Close the server socket
             serverSocket.close();
-            
+
         } catch (final Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 
+     * Handler that represent each client request.
      */
-    static class Handler implements Runnable {
+    private static class Handler implements Runnable {
         private final Socket socket;
         private final DTTQInterface dttq;
         private final AtomicInteger done;
 
         /**
+         * Create a new handler.
          * 
-         * @param socket
+         * @param socket client socket used for communication
+         * @param dttq   shared memory implementation {@link DTTQInterface}
+         * @param done   atomic variable used for the stopping criteria
+         *               {@link AtomicInteger}
          */
         Handler(final Socket socket, final DTTQInterface dttq, final AtomicInteger done) {
             this.socket = socket;

@@ -46,7 +46,7 @@ public class Porter implements Runnable {
      * @param al  {@link ALInterface}
      * @param ph  {@link PHInterface}
      * @param bcp {@link BCPInterface}
-     * @param tsa {@link TemporaryStorageArea}
+     * @param tsa {@link TSAInterface}
      * @param gri {@link GRIInterface}
      */
     public Porter(final ALInterface al, final PHInterface ph, final BCPInterface bcp,

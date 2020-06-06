@@ -11,7 +11,7 @@ import java.io.Closeable;
  */
 public interface DTEInterface extends Closeable {
     /**
-     * Reset the {@link DepartureTerminalEntrance} by setting the blocked to 0.
+     * Reset the {@link DTEInterface} by setting the blocked to 0.
      */
     public void reset();
 

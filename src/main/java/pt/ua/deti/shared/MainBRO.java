@@ -14,7 +14,6 @@ import pt.ua.deti.common.Utils;
 import pt.ua.deti.shared.imp.BaggageReclaimOffice;
 import pt.ua.deti.shared.stubs.BROInterface;
 
-
 /**
  * {@link BROInterface} Server.
  * 
@@ -23,6 +22,13 @@ import pt.ua.deti.shared.stubs.BROInterface;
  * @version 1.0
  */
 public class MainBRO {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainBRO() {
+    }
+
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -60,16 +66,20 @@ public class MainBRO {
     }
 
     /**
-     * 
+     * Handler that represent each client request.
      */
-    static class Handler implements Runnable {
+    private static class Handler implements Runnable {
         private final Socket socket;
         private final BROInterface bro;
         private final AtomicInteger done;
 
         /**
+         * Create a new handler.
          * 
-         * @param socket
+         * @param socket client socket used for communication
+         * @param bro    shared memory implementation {@link BROInterface}
+         * @param done   atomic variable used for the stopping criteria
+         *               {@link AtomicInteger}
          */
         Handler(final Socket socket, final BROInterface bro, final AtomicInteger done) {
             this.socket = socket;

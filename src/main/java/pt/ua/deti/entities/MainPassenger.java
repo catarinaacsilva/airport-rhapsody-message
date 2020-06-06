@@ -9,10 +9,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import pt.ua.deti.common.Bag;
 import pt.ua.deti.common.Plane;
 import pt.ua.deti.common.Utils;
-import pt.ua.deti.shared.imp.ArrivalTerminalExit;
-import pt.ua.deti.shared.imp.ArrivalTerminalTransferQuay;
-import pt.ua.deti.shared.imp.BaggageReclaimOffice;
-import pt.ua.deti.shared.imp.DepartureTerminalEntrance;
 import pt.ua.deti.shared.remote.ALRemote;
 import pt.ua.deti.shared.remote.ATERemote;
 import pt.ua.deti.shared.remote.ATTQRemote;
@@ -33,13 +29,20 @@ import pt.ua.deti.shared.stubs.GRIInterface;
 import pt.ua.deti.shared.stubs.PHInterface;
 
 /**
- * Main execution program.
+ * Main execution program for {@link Passenger}.
  * 
  * @author Catarina Silva
  * @author Duarte Dias
  * @version 1.0
  */
 public class MainPassenger {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainPassenger() {
+    }
+
     public static void main(final String[] args) throws IOException {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -165,14 +168,14 @@ public class MainPassenger {
      * @param M    the maximum number of {@link pt.ua.deti.common.Bag} per
      *             {@link pt.ua.deti.entities.Passenger}
      * @param P    the probability of losing a bag in the trip
-     * @param gri  {@link GeneralRepositoryInformation}
+     * @param gri  {@link GRIInterface}
      * @param al   {@link ALInterface}
      * @param bcp  {@link BCPInterface}
-     * @param bro  {@link BaggageReclaimOffice}
-     * @param ate  {@link ArrivalTerminalExit}
-     * @param dte  {@link DepartureTerminalEntrance}
-     * @param attq {@link ArrivalTerminalTransferQuay}
-     * @param dttq {@link DepartureTerminalTransferQuay}
+     * @param bro  {@link BROInterface}
+     * @param ate  {@link ATEInterface}
+     * @param dte  {@link DTEInterface}
+     * @param attq {@link ATTQInterface}
+     * @param dttq {@link DTTQInterface}
      * @return a {@link List} of {@link pt.ua.deti.common.Plane}s for the simulation
      */
     private static List<Plane> createPlanes(final int K, final int N, final int M, final double P,

@@ -25,6 +25,13 @@ import pt.ua.deti.shared.stubs.TSAInterface;
  * @version 1.0
  */
 public class MainTSA {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainTSA() {
+    }
+
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -52,30 +59,34 @@ public class MainTSA {
                     final Handler handler = new Handler(serverSocket.accept(), tsa, done);
                     final Thread thread = new Thread(handler);
                     thread.start();
-                } catch(SocketTimeoutException e) {
-                    //ignore, used to check the stopping criteria
+                } catch (SocketTimeoutException e) {
+                    // ignore, used to check the stopping criteria
                 }
             }
 
             // Close the server socket
             serverSocket.close();
-            
+
         } catch (final Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 
+     * Handler that represent each client request.
      */
-    static class Handler implements Runnable {
+    private static class Handler implements Runnable {
         private final Socket socket;
         private final TSAInterface tsa;
         private final AtomicInteger done;
 
         /**
+         * Create a new handler.
          * 
-         * @param socket
+         * @param socket client socket used for communication
+         * @param tsa    shared memory implementation {@link TSAInterface}
+         * @param done   atomic variable used for the stopping criteria
+         *               {@link AtomicInteger}
          */
         Handler(final Socket socket, final TSAInterface tsa, final AtomicInteger done) {
             this.socket = socket;

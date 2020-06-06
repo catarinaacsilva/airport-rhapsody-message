@@ -10,6 +10,7 @@ import java.io.Serializable;
  * @version 1.0
  */
 public class Bag implements Serializable {
+    /** serialization runtime associates with each serializable class a version number */
     private static final long serialVersionUID = 1L;
     /** {@link pt.ua.deti.common.Bag} id */
     private final int id;

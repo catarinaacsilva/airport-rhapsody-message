@@ -22,6 +22,13 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * @version 1.0
  */
 public class MainGRI {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainGRI() {
+    }
+
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -52,8 +59,8 @@ public class MainGRI {
                     final ClientHandler clientHandler = new ClientHandler(serverSocket.accept(), gri, done);
                     final Thread thread = new Thread(clientHandler);
                     thread.start();
-                } catch(SocketTimeoutException e) {
-                    //ignore, used to check the stopping criteria
+                } catch (SocketTimeoutException e) {
+                    // ignore, used to check the stopping criteria
                 }
             }
 
@@ -63,23 +70,27 @@ public class MainGRI {
             // Write the final report and close the logger file
             gri.writeReport();
             gri.close();
-            
+
         } catch (final Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 
+     * Handler that represent each client request.
      */
-    static class ClientHandler implements Runnable {
+    private static class ClientHandler implements Runnable {
         private final Socket socket;
         private final GRIInterface gri;
         private final AtomicInteger done;
 
         /**
+         * Create a new handler.
          * 
-         * @param socket
+         * @param socket client socket used for communication
+         * @param gri    shared memory implementation {@link GRIInterface}
+         * @param done   atomic variable used for the stopping criteria
+         *               {@link AtomicInteger}
          */
         ClientHandler(final Socket socket, final GRIInterface gri, final AtomicInteger done) {
             this.socket = socket;

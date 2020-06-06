@@ -26,6 +26,13 @@ import pt.ua.deti.shared.stubs.PHInterface;
  * @version 1.0
  */
 public class MainPH {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainPH() {
+    }
+
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -53,30 +60,34 @@ public class MainPH {
                     final Handler handler = new Handler(serverSocket.accept(), ph, done);
                     final Thread thread = new Thread(handler);
                     thread.start();
-                } catch(SocketTimeoutException e) {
-                    //ignore, used to check the stopping criteria
+                } catch (SocketTimeoutException e) {
+                    // ignore, used to check the stopping criteria
                 }
             }
 
             // Close the server socket
             serverSocket.close();
-            
+
         } catch (final Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 
+     * Handler that represent each client request.
      */
-    static class Handler implements Runnable {
+    private static class Handler implements Runnable {
         private final Socket socket;
         private final PHInterface ph;
         private final AtomicInteger done;
 
         /**
+         * Create a new handler.
          * 
-         * @param socket
+         * @param socket client socket used for communication
+         * @param ph     shared memory implementation {@link PHInterface}
+         * @param done   atomic variable used for the stopping criteria
+         *               {@link AtomicInteger}
          */
         Handler(final Socket socket, final PHInterface ph, final AtomicInteger done) {
             this.socket = socket;

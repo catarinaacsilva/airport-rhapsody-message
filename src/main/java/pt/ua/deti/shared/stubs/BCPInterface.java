@@ -19,7 +19,7 @@ public interface BCPInterface extends Closeable {
      *          {@link pt.ua.deti.entities.Porter}
      */
     public void storeBag(final Bag b);
-    
+
     /**
      * Method used by the {@link pt.ua.deti.entities.Passenger} to collect the bags
      * 
@@ -34,7 +34,7 @@ public interface BCPInterface extends Closeable {
     public void noMoreBags();
 
     /**
-     * Reset the {@link BaggageCollectionPoint} by setting the noMoreBags has false.
+     * Reset the {@link BCPInterface} by setting the noMoreBags has false.
      */
     public void reset();
 }

@@ -15,7 +15,21 @@ import pt.ua.deti.shared.stubs.GRIInterface;
 import pt.ua.deti.shared.stubs.PHInterface;
 import pt.ua.deti.shared.stubs.TSAInterface;
 
+/**
+ * Main execution program for {@link Porter}.
+ * 
+ * @author Catarina Silva
+ * @author Duarte Dias
+ * @version 1.0
+ */
 public class MainPorter {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainPorter() {
+    }
+
     public static void main(final String[] args) throws IOException {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");

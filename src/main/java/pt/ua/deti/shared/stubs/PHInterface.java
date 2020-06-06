@@ -16,7 +16,7 @@ public interface PHInterface extends Closeable {
 
     /**
      * Unload bags from the {@link pt.ua.deti.common.Plane} and place them into the
-     * {@link PlaneHold}.
+     * {@link PHInterface}.
      * 
      * @param bags      {@link List} of {@link pt.ua.deti.common.Bag}
      * @param lastPlane flag used to identify if this is the last plane

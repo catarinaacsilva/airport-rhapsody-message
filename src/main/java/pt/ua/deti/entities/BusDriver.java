@@ -45,10 +45,11 @@ public class BusDriver implements Runnable {
      * @param attq {@link ATTQInterface}
      * @param dttq {@link DTTQInterface}
      * @param ate  {@link ATEInterface}
+     * @param dte  {@link DTEInterface}
      * @param gri  {@link GRIInterface} serves as log
      */
-    public BusDriver(final ATTQInterface attq, final DTTQInterface dttq,
-        final ATEInterface ate, final DTEInterface dte, final GRIInterface gri) {
+    public BusDriver(final ATTQInterface attq, final DTTQInterface dttq, final ATEInterface ate, final DTEInterface dte,
+            final GRIInterface gri) {
         this.attq = attq;
         this.dttq = dttq;
         this.ate = ate;

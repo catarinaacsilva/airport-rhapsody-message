@@ -21,6 +21,13 @@ public class Utils {
     private Utils() {
     }
 
+    /**
+     * Casts one object type into another suppressing compilation warning.
+     * 
+     * @param o object to be casted
+     * @param <T> the new object type
+     * @return the casted object
+     */
     @SuppressWarnings("unchecked")
     public static <T> T cast(Object o) {
         return (T) o;

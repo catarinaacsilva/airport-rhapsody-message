@@ -65,7 +65,7 @@ public interface GRIInterface extends Closeable {
     public void updatePlane(final int fn, final int bn);
 
     /**
-     * Update the {@link PlaneHold} state.
+     * Update the {@link pt.ua.deti.shared.stubs.PHInterface} state.
      * 
      * @param bn number of pieces of luggage presently at the plane's hold
      */

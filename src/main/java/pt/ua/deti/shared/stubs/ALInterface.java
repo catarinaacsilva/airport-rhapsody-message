@@ -11,7 +11,7 @@ import java.io.Closeable;
  */
 public interface ALInterface extends Closeable {
     /**
-     * Reset the {@link ArrivalLounge} by setting the disembark at zero.
+     * Reset the {@link ALInterface} by setting the disembark at zero.
      */
     public void reset();
 

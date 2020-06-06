@@ -24,6 +24,13 @@ import pt.ua.deti.shared.stubs.DTEInterface;
  * @version 1.0
  */
 public class MainATE {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainATE() {
+    }
+
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -67,16 +74,20 @@ public class MainATE {
     }
 
     /**
-     * 
+     * Handler that represent each client request.
      */
-    static class Handler implements Runnable {
+    private static class Handler implements Runnable {
         private final Socket socket;
         private final ATEInterface ate;
         private final AtomicInteger done;
 
         /**
+         * Create a new handler.
          * 
-         * @param socket
+         * @param socket client socket used for communication
+         * @param ate    shared memory implementation {@link ATEInterface}
+         * @param done   atomic variable used for the stopping criteria
+         *               {@link AtomicInteger}
          */
         Handler(final Socket socket, final ATEInterface ate, final AtomicInteger done) {
             this.socket = socket;

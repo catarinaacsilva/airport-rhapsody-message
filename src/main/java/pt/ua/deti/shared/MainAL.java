@@ -22,6 +22,13 @@ import pt.ua.deti.shared.stubs.ALInterface;
  * @version 1.0
  */
 public class MainAL {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainAL() {
+    }
+    
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -29,10 +36,8 @@ public class MainAL {
         final int N = Integer.parseInt(prop.getProperty("N"));
         // Server port
         final int port = Integer.parseInt(prop.getProperty("al_port"));
-
         // Create the Shared Region
         final ALInterface al = new ArrivalLounge(N);
-
         // Stopping criteria
         final AtomicInteger done = new AtomicInteger(0);
 
@@ -61,16 +66,20 @@ public class MainAL {
     }
 
     /**
-     * 
+     * Handler that represent each client request.
      */
-    static class Handler implements Runnable {
+    private static class Handler implements Runnable {
         private final Socket socket;
         private final ALInterface al;
         private final AtomicInteger done;
 
         /**
+         * Create a new handler.
          * 
-         * @param socket
+         * @param socket client socket used for communication
+         * @param al     shared memory implementation {@link ALInterface}
+         * @param done   atomic variable used for the stopping criteria
+         *               {@link AtomicInteger}
          */
         Handler(final Socket socket, final ALInterface al, final AtomicInteger done) {
             this.socket = socket;

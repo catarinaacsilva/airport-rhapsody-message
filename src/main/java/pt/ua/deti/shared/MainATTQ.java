@@ -24,6 +24,13 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * @version 1.0
  */
 public class MainATTQ {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainATTQ() {
+    }
+
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -71,16 +78,20 @@ public class MainATTQ {
     }
 
     /**
-     * 
+     * Handler that represent each client request.
      */
-    static class Handler implements Runnable {
+    private static class Handler implements Runnable {
         private final Socket socket;
         private final ATTQInterface attq;
         private final AtomicInteger done;
 
         /**
+         * Create a new handler.
          * 
-         * @param socket
+         * @param socket client socket used for communication
+         * @param attq   shared memory implementation {@link ATTQInterface}
+         * @param done   atomic variable used for the stopping criteria
+         *               {@link AtomicInteger}
          */
         Handler(final Socket socket, final ATTQInterface attq, final AtomicInteger done) {
             this.socket = socket;

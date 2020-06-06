@@ -24,6 +24,13 @@ import pt.ua.deti.shared.stubs.DTEInterface;
  * @version 1.0
  */
 public class MainDTE {
+
+    /**
+     * Main class, lets make the constructor private.
+     */
+    private MainDTE() {
+    }
+
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -67,16 +74,20 @@ public class MainDTE {
     }
 
     /**
-     * 
+     * Handler that represent each client request.
      */
-    static class Handler implements Runnable {
+    private static class Handler implements Runnable {
         private final Socket socket;
         private final DTEInterface dte;
         private final AtomicInteger done;
 
         /**
+         * Create a new handler.
          * 
-         * @param socket
+         * @param socket client socket used for communication
+         * @param dte    shared memory implementation {@link DTEInterface}
+         * @param done   atomic variable used for the stopping criteria
+         *               {@link AtomicInteger}
          */
         Handler(final Socket socket, final DTEInterface dte, final AtomicInteger done) {
             this.socket = socket;
@@ -114,7 +125,7 @@ public class MainDTE {
                         reply = new MessageReply(request.type, 0, dte.getBlocked());
                         break;
                     default:
-                        reply = new MessageReply(request.type, -1, "unknown method: "+request.type);
+                        reply = new MessageReply(request.type, -1, "unknown method: " + request.type);
                         break;
                 }
 
