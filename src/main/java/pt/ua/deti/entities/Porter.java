@@ -12,7 +12,6 @@ import pt.ua.deti.shared.stubs.PHInterface;
  * Porter entity.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class Porter implements Runnable {

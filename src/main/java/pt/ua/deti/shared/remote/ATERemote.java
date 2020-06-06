@@ -11,7 +11,6 @@ import pt.ua.deti.shared.stubs.ATEInterface;
  * Remote {@link ATEInterface}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class ATERemote implements ATEInterface {

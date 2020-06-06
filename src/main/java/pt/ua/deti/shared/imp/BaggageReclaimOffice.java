@@ -12,7 +12,6 @@ import pt.ua.deti.shared.stubs.BROInterface;
  * Baggage Reclaim Office.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class BaggageReclaimOffice implements BROInterface {

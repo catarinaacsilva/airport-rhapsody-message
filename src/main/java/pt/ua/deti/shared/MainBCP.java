@@ -20,7 +20,6 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * {@link BCPInterface} Server.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class MainBCP {

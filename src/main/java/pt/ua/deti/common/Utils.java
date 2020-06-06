@@ -11,7 +11,6 @@ import java.util.Properties;
  * Utils library.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class Utils {

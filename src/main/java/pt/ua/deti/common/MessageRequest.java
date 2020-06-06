@@ -7,7 +7,6 @@ import java.io.Serializable;
  * class represents a method request.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class MessageRequest implements Serializable {

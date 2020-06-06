@@ -28,7 +28,6 @@ import pt.ua.deti.shared.stubs.DTEInterface;
  * </ul>
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class DepartureTerminalEntrance implements DTEInterface {

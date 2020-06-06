@@ -11,7 +11,6 @@ import pt.ua.deti.shared.stubs.DTTQInterface;
  * Remote {@link DTTQInterface}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class DTTQRemote implements DTTQInterface {

@@ -11,7 +11,6 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * Remote {@link GRIInterface}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class GRIRemote implements GRIInterface {

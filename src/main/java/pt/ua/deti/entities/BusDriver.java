@@ -10,7 +10,6 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * Bus Driver entity.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class BusDriver implements Runnable {

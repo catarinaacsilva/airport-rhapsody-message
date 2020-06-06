@@ -12,7 +12,6 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * Departure Terminal Transfer Quay.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class DepartureTerminalTransferQuay implements DTTQInterface {

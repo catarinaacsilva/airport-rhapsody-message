@@ -6,7 +6,6 @@ import java.io.Closeable;
  * Departure Terminal Entrance Interface.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public interface DTEInterface extends Closeable {

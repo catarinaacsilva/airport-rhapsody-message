@@ -24,7 +24,6 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * </p>
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class GeneralRepositoryInformation implements GRIInterface {

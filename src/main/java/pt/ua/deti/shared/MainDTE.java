@@ -20,7 +20,6 @@ import pt.ua.deti.shared.stubs.DTEInterface;
  * {@link DTEInterface} Server.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class MainDTE {

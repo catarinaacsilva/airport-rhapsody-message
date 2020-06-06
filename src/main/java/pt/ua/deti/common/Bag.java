@@ -6,7 +6,6 @@ import java.io.Serializable;
  * This class represents a bag.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class Bag implements Serializable {

@@ -13,7 +13,6 @@ import pt.ua.deti.shared.stubs.PHInterface;
  * Remote {@link PHInterface}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class PHRemote implements PHInterface {

@@ -6,7 +6,6 @@ import java.io.Closeable;
  * General Repository of Information Interface
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public interface GRIInterface extends Closeable {

@@ -12,7 +12,6 @@ import pt.ua.deti.shared.stubs.BCPInterface;
  * Remote {@link BCPRemote}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class BCPRemote implements BCPInterface {

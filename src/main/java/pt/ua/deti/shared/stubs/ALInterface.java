@@ -6,7 +6,6 @@ import java.io.Closeable;
  * Arrival Lounge Interface.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public interface ALInterface extends Closeable {

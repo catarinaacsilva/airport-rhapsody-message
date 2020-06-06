@@ -6,7 +6,6 @@ import java.io.Closeable;
  * Arrival Terminal Exit Interface.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public interface ATEInterface extends Closeable {

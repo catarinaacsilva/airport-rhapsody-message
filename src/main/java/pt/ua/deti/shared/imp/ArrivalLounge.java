@@ -11,7 +11,6 @@ import pt.ua.deti.shared.stubs.ALInterface;
  * Arrival Lounge location.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class ArrivalLounge implements ALInterface {

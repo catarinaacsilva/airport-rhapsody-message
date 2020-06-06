@@ -15,7 +15,6 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * Baggage Collection Point.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class BaggageCollectionPoint implements BCPInterface {

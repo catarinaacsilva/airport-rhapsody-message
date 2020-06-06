@@ -11,7 +11,6 @@ import pt.ua.deti.shared.stubs.ALInterface;
  * Remote {@link ALInterface}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class ALRemote implements ALInterface {

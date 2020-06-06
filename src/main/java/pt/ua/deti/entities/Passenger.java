@@ -16,7 +16,6 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * Passenger entity.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class Passenger implements Runnable {

@@ -7,7 +7,6 @@ import java.io.Serializable;
  * class represents a method reply.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class MessageReply implements Serializable {

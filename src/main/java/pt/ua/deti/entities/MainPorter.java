@@ -19,7 +19,6 @@ import pt.ua.deti.shared.stubs.TSAInterface;
  * Main execution program for {@link Porter}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class MainPorter {

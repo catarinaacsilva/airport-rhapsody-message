@@ -19,7 +19,6 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * Main execution program for {@link BusDriver}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class MainBusDriver {

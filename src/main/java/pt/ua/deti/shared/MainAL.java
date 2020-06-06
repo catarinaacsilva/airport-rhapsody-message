@@ -18,7 +18,6 @@ import pt.ua.deti.shared.stubs.ALInterface;
  * {@link ALInterface} Server.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class MainAL {

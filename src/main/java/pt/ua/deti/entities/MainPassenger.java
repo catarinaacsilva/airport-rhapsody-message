@@ -32,7 +32,6 @@ import pt.ua.deti.shared.stubs.PHInterface;
  * Main execution program for {@link Passenger}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class MainPassenger {

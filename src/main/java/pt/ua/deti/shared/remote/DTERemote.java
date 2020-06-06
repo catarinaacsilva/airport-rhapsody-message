@@ -11,7 +11,6 @@ import pt.ua.deti.shared.stubs.DTEInterface;
  * Remote {@link DTEInterface}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class DTERemote implements DTEInterface {

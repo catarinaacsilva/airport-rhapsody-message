@@ -11,7 +11,6 @@ import pt.ua.deti.shared.stubs.BROInterface;
  * Remote {@link BRORemote}.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class BRORemote implements BROInterface {

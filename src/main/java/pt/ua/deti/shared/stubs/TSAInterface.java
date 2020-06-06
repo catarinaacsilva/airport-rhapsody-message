@@ -8,7 +8,6 @@ import pt.ua.deti.common.Bag;
  * Temporary Storage Area Interface.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public interface TSAInterface extends Closeable {

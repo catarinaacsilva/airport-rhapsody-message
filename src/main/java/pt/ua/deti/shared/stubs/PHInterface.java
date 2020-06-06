@@ -9,7 +9,6 @@ import pt.ua.deti.common.Bag;
  * Plane Hold Interface.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public interface PHInterface extends Closeable {

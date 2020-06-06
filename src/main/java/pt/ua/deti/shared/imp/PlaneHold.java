@@ -11,7 +11,6 @@ import pt.ua.deti.shared.stubs.PHInterface;
  * Plane Hold Interface.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class PlaneHold implements PHInterface {

@@ -22,7 +22,6 @@ import pt.ua.deti.shared.stubs.PHInterface;
  * {@link PlaneHold} Server.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class MainPH {

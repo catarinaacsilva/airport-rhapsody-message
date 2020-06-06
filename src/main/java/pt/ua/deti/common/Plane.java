@@ -8,7 +8,6 @@ import pt.ua.deti.entities.Passenger;
  * Class that represents a plane.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class Plane {

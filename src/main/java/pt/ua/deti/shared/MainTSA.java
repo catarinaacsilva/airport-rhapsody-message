@@ -21,7 +21,6 @@ import pt.ua.deti.shared.stubs.TSAInterface;
  * {@link TemporaryStorageArea} Server.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public class MainTSA {

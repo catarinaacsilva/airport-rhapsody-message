@@ -6,7 +6,6 @@ import java.io.Closeable;
  * Departure Terminal Transfer Quay Interface.
  * 
  * @author Catarina Silva
- * @author Duarte Dias
  * @version 1.0
  */
 public interface DTTQInterface extends Closeable {
