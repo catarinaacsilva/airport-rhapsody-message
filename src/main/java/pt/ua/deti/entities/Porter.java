@@ -1,9 +1,10 @@
 package pt.ua.deti.entities;
 
 import pt.ua.deti.common.Bag;
-import pt.ua.deti.shared.imp.ArrivalLounge;
-import pt.ua.deti.shared.imp.BaggageCollectionPoint;
+
 import pt.ua.deti.shared.stubs.TSAInterface;
+import pt.ua.deti.shared.stubs.ALInterface;
+import pt.ua.deti.shared.stubs.BCPInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
 import pt.ua.deti.shared.stubs.PHInterface;
 
@@ -24,14 +25,14 @@ public class Porter implements Runnable {
 
     /** {@link State} the state of the {@link pt.ua.deti.entities.Porter} */
     private State state;
-    /** {@link GeneralRepositoryInformation} serves as log */
+    /** {@link GRIInterface} serves as log */
     private final GRIInterface gri;
-    /** {@link ArrivalLounge} */
-    private final ArrivalLounge al;
+    /** {@link ALInterface} */
+    private final ALInterface al;
     /** {@link PHInterface} */
     private final PHInterface ph;
-    /** {@link BaggageCollectionPoint} */
-    private final BaggageCollectionPoint bcp;
+    /** {@link BCPInterface} */
+    private final BCPInterface bcp;
     /** {@link TSAInterface} */
     private final TSAInterface tsa;
     /** Temporary storage to move {@link pt.ua.deti.common.Bag} */
@@ -40,15 +41,15 @@ public class Porter implements Runnable {
     private boolean done = false;
 
     /**
-     * Creates a new {@link pt.ua.deti.entities.Porter},
+     * Creates a new {@link Porter}.
      * 
-     * @param al  {@link ArrivalLounge}
+     * @param al  {@link ALInterface}
      * @param ph  {@link PHInterface}
-     * @param bcp {@link BaggageCollectionPoint}
+     * @param bcp {@link BCPInterface}
      * @param tsa {@link TemporaryStorageArea}
-     * @param gri {@link GeneralRepositoryInformation}
+     * @param gri {@link GRIInterface}
      */
-    public Porter(final ArrivalLounge al, final PHInterface ph, final BaggageCollectionPoint bcp,
+    public Porter(final ALInterface al, final PHInterface ph, final BCPInterface bcp,
             final TSAInterface tsa, final GRIInterface gri) {
         this.state = State.WAITING_FOR_A_PLANE_TO_LAND;
         this.al = al;
@@ -85,6 +86,8 @@ public class Porter implements Runnable {
         }
 
         try {
+            al.close();
+            bcp.close();
             ph.close();
             tsa.close();
             gri.close();

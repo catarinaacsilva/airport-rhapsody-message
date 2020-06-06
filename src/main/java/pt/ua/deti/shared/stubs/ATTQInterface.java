@@ -1,13 +1,15 @@
 package pt.ua.deti.shared.stubs;
 
+import java.io.Closeable;
+
 /**
- * Arrival Terminal Transfer Quay Interface
+ * Arrival Terminal Transfer Quay Interface.
  * 
  * @author Catarina Silva
  * @author Duarte Dias
  * @version 1.0
  */
-public interface ATTQInterface {
+public interface ATTQInterface extends Closeable {
     /**
      * Take a bus.
      * 

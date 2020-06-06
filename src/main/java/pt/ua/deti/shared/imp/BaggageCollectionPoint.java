@@ -1,5 +1,6 @@
 package pt.ua.deti.shared.imp;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
@@ -7,6 +8,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import pt.ua.deti.common.Bag;
+import pt.ua.deti.shared.stubs.BCPInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
 
 /**
@@ -16,31 +18,30 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  * @author Duarte Dias
  * @version 1.0
  */
-public class BaggageCollectionPoint {
+public class BaggageCollectionPoint implements BCPInterface {
     /** {@link List} of bags from the passengers */
     private final List<Bag> bags = new ArrayList<>();
     /** {@link Lock} used by the entities to change the internal state */
     private final Lock lock = new ReentrantLock();
     /** {@link Condition} used by the passenger to check again for bags */
     private final Condition cond = lock.newCondition();
-    /** Boolean that indicates that there are no more bags on the {@link PlaneHold} */
+    /**
+     * Boolean that indicates that there are no more bags on the {@link PlaneHold}
+     */
     private boolean noMoreBags = false;
     /** {@link GRIInterface} serves as log */
     private final GRIInterface gri;
 
     /**
      * Create a Baggage Collection Point.
+     * 
      * @param gri {@link GRIInterface}
      */
     public BaggageCollectionPoint(final GRIInterface gri) {
         this.gri = gri;
     }
 
-    /**
-     * Method used by the porter to store bags in the conveyor belt.
-     * 
-     * @param b {@link pt.ua.deti.common.Bag} carry be the {@link pt.ua.deti.entities.Porter}
-     */
+    @Override
     public void storeBag(final Bag b) {
         lock.lock();
         try {
@@ -52,12 +53,7 @@ public class BaggageCollectionPoint {
         }
     }
 
-    /**
-     * Method used by the {@link pt.ua.deti.entities.Passenger} to collect the bags
-     * 
-     * @param bagId the id of the {@link pt.ua.deti.common.Bag}
-     * @return True if the bag was collected, otherwise false
-     */
+    @Override
     public boolean goCollectBag(final int bagId) {
         lock.lock();
         boolean found = false, done = false;
@@ -87,9 +83,7 @@ public class BaggageCollectionPoint {
         return found;
     }
 
-    /**
-     * The {@link pt.ua.deti.entities.Porter} notifies that there are no more bags.
-     */
+    @Override
     public void noMoreBags() {
         lock.lock();
         try {
@@ -100,9 +94,7 @@ public class BaggageCollectionPoint {
         }
     }
 
-    /**
-     * Reset the {@link BaggageCollectionPoint} by setting the noMoreBags has false.
-     */
+    @Override
     public void reset() {
         lock.lock();
         try {
@@ -110,5 +102,10 @@ public class BaggageCollectionPoint {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        // Used for the remote version
     }
 }

@@ -39,6 +39,17 @@ public class MessageRequest implements Serializable {
         this.argObj = null;
     }
 
+    public MessageRequest(final String type, final boolean argBool) {
+        this.type = type;
+        this.argBool = argBool;
+        this.argInt0 = 0;
+        this.argInt1 = 0;
+        this.argInt2 = 0;
+        this.argInt3 = 0;
+        this.argInt4 = 0;
+        this.argObj = null;
+    }
+
     public MessageRequest(final String type, final int argInt0, final int argInt1) {
         this.type = type;
         this.argBool = false;

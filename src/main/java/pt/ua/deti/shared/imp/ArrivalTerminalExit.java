@@ -1,10 +1,14 @@
 package pt.ua.deti.shared.imp;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import pt.ua.deti.shared.stubs.ATEInterface;
+import pt.ua.deti.shared.stubs.DTEInterface;
 
 /**
  * Arrival Terminal Exit.
@@ -27,7 +31,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Duarte Dias
  * @version 1.0
  */
-public class ArrivalTerminalExit {
+public class ArrivalTerminalExit implements ATEInterface {
     /** {@link Lock} used by the entities to change the internal state */
     private final Lock lock = new ReentrantLock();
     /** {@link Condition} used by the passenger to check again for bags */
@@ -39,8 +43,8 @@ public class ArrivalTerminalExit {
     private final AtomicInteger blocked = new AtomicInteger(0);
     /** Total number of {@link pt.ua.deti.entities.Passenger} */
     private final int total;
-    /** {@link DepartureTerminalEntrance} */
-    private DepartureTerminalEntrance dte;
+    /** {@link DTEInterface} */
+    private DTEInterface dte;
     /** Flag used to identify if is the last plane */
     private boolean last = false;
 
@@ -51,6 +55,18 @@ public class ArrivalTerminalExit {
      */
     public ArrivalTerminalExit(final int total) {
         this.total = total;
+        this.dte = null;
+    }
+
+    /**
+     * Create a {@link ArrivalTerminalExit}
+     * 
+     * @param total total number of {@link pt.ua.deti.entities.Passenger}
+     * @param dte   the other exit point (@{link DepartureTerminalEntrance})
+     */
+    public ArrivalTerminalExit(final int total, final DTEInterface dte) {
+        this.total = total;
+        this.dte = dte;
     }
 
     /**
@@ -58,15 +74,11 @@ public class ArrivalTerminalExit {
      * 
      * @param dte the other exit point (@{link DepartureTerminalEntrance})
      */
-    public void setDTE(final DepartureTerminalEntrance dte) {
+    public void setDTE(final DTEInterface dte) {
         this.dte = dte;
     }
 
-    /**
-     * Reset the {@link DepartureTerminalEntrance} by setting the blocked to 0.
-     * 
-     * @param last flag used to identify if is the last plane
-     */
+    @Override
     public void reset(final boolean last) {
         lock.lock();
         try {
@@ -77,11 +89,7 @@ public class ArrivalTerminalExit {
         }
     }
 
-    /**
-     * Go Home.
-     * 
-     * @param id the identification of the Passenger
-     */
+    @Override
     public void goHome(final int id) {
         lock.lock();
         try {
@@ -90,7 +98,6 @@ public class ArrivalTerminalExit {
                 cond.await(300, TimeUnit.MILLISECONDS);
             }
             cond.signalAll();
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -98,28 +105,26 @@ public class ArrivalTerminalExit {
         }
     }
 
-    /**
-     * Returns the number of blocked {@link pt.ua.deti.entities.Passenger}.
-     * 
-     * @return the number of blocked {@link pt.ua.deti.entities.Passenger}
-     */
+    @Override
     public int getBlocked() {
         return blocked.get();
     }
 
-    /**
-     * Has days work ended.
-     * 
-     * @return true if the simulation is finished; otherwise false
-     */
+    @Override
     public boolean hasDaysWorkEnded() {
         boolean rv = false;
         lock.lock();
         try {
-            rv = ((dte.getBlocked() + blocked.get()) == total) && last;
+            int done = (dte.getBlocked() + blocked.get());
+            rv = (done == total) && last;
         } finally {
             lock.unlock();
         }
         return rv;
+    }
+
+    @Override
+    public void close() throws IOException {
+        // Used for the remote version
     }
 }

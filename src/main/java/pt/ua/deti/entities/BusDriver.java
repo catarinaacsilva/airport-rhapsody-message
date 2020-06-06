@@ -1,8 +1,8 @@
 package pt.ua.deti.entities;
 
-import pt.ua.deti.shared.imp.ArrivalTerminalExit;
-import pt.ua.deti.shared.imp.ArrivalTerminalTransferQuay;
-import pt.ua.deti.shared.imp.GeneralRepositoryInformation;
+import pt.ua.deti.shared.stubs.ATEInterface;
+import pt.ua.deti.shared.stubs.ATTQInterface;
+import pt.ua.deti.shared.stubs.DTEInterface;
 import pt.ua.deti.shared.stubs.DTTQInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
 
@@ -24,13 +24,15 @@ public class BusDriver implements Runnable {
 
     /** {@link State} the state of the {@link pt.ua.deti.entities.Porter} */
     private State state;
-    /** {@link ArrivalTerminalTransferQuay} */
-    private final ArrivalTerminalTransferQuay attq;
+    /** {@link ATTQInterface} */
+    private final ATTQInterface attq;
     /** {@link DTTQInterface} */
     private final DTTQInterface dttq;
-    /** {@link ArrivalTerminalExit} */
-    private final ArrivalTerminalExit ate;
-    /** {@link GeneralRepositoryInformation} serves as log */
+    /** {@link ATEInterface} */
+    private final ATEInterface ate;
+    /** {@link DTEInterface} */
+    private final DTEInterface dte;
+    /** {@link GRIInterface} serves as log */
     private final GRIInterface gri;
     /** Flag used to indicate if the life cycle is done */
     private boolean done = false;
@@ -40,16 +42,17 @@ public class BusDriver implements Runnable {
     /**
      * Create a new {@link pt.ua.deti.entities.BusDriver}.
      * 
-     * @param attq {@link ArrivalTerminalTransferQuay}
+     * @param attq {@link ATTQInterface}
      * @param dttq {@link DTTQInterface}
-     * @param ate  {@link ArrivalTerminalExit}
-     * @param gri  {@link GeneralRepositoryInformation} serves as log
+     * @param ate  {@link ATEInterface}
+     * @param gri  {@link GRIInterface} serves as log
      */
-    public BusDriver(final ArrivalTerminalTransferQuay attq, final DTTQInterface dttq,
-        final ArrivalTerminalExit ate, final GRIInterface gri) {
+    public BusDriver(final ATTQInterface attq, final DTTQInterface dttq,
+        final ATEInterface ate, final DTEInterface dte, final GRIInterface gri) {
         this.attq = attq;
         this.dttq = dttq;
         this.ate = ate;
+        this.dte = dte;
         this.gri = gri;
         state = State.PARKING_AT_THE_ARRIVAL_TERMINAL;
     }
@@ -84,7 +87,10 @@ public class BusDriver implements Runnable {
         }
 
         try {
+            ate.close();
+            dte.close();
             dttq.close();
+            attq.close();
             gri.close();
         } catch (Exception e) {
             e.printStackTrace();

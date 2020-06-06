@@ -1,8 +1,11 @@
 package pt.ua.deti.shared.imp;
 
+import java.io.IOException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import pt.ua.deti.shared.stubs.ALInterface;
 
 /**
  * Arrival Lounge location.
@@ -11,20 +14,27 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Duarte Dias
  * @version 1.0
  */
-public class ArrivalLounge {
+public class ArrivalLounge implements ALInterface {
     /** {@link Lock} used by the entities to change the internal state */
     private final Lock lock = new ReentrantLock();
-    /** {@link Condition} used by the {@link pt.ua.deti.entities.Porter} to wait for all {@link pt.ua.deti.entities.Passenger} */
+    /**
+     * {@link Condition} used by the {@link pt.ua.deti.entities.Porter} to wait for
+     * all {@link pt.ua.deti.entities.Passenger}
+     */
     private final Condition cond = lock.newCondition();
     /** The number of {@link pt.ua.deti.entities.Passenger} that have disembarked */
     private int disembark;
     /** The total number of {@link pt.ua.deti.entities.Passenger} */
     private int totalPassengers;
-    /** Flag used to notify the {@link pt.ua.deti.entities.Porter} if it is a new plane */
+    /**
+     * Flag used to notify the {@link pt.ua.deti.entities.Porter} if it is a new
+     * plane
+     */
     private boolean newPlane;
 
     /**
      * Creates a {@link ArrivalLounge}
+     * 
      * @param totalPassengers the number of {@link pt.ua.deti.entities.Passenger} in
      *                        the {@link pt.ua.deti.common.Plane}
      */
@@ -34,9 +44,7 @@ public class ArrivalLounge {
         this.totalPassengers = totalPassengers;
     }
 
-    /**
-     * Reset the {@link ArrivalLounge} by setting the disembark at zero.
-     */
+    @Override
     public void reset() {
         lock.lock();
         try {
@@ -47,10 +55,7 @@ public class ArrivalLounge {
         }
     }
 
-    /**
-     * The {@link pt.ua.deti.entities.Porter} takes a rest and waits for all the {@link pt.ua.deti.entities.Passenger} to
-     * leave the {@link pt.ua.deti.common.Plane}.
-     */
+    @Override
     public void takeARest() {
         lock.lock();
         try {
@@ -65,9 +70,7 @@ public class ArrivalLounge {
         }
     }
 
-    /**
-     * The {@link pt.ua.deti.entities.Passenger} indicates that has left the {@link pt.ua.deti.common.Plane}.
-     */
+    @Override
     public void whatShouldIDo() {
         lock.lock();
         try {
@@ -76,5 +79,10 @@ public class ArrivalLounge {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        // Used for the remote version
     }
 }

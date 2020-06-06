@@ -1,4 +1,4 @@
-package pt.ua.deti.main;
+package pt.ua.deti.entities;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,23 +9,28 @@ import java.util.concurrent.ThreadLocalRandom;
 import pt.ua.deti.common.Bag;
 import pt.ua.deti.common.Plane;
 import pt.ua.deti.common.Utils;
-import pt.ua.deti.entities.BusDriver;
-import pt.ua.deti.entities.Passenger;
-import pt.ua.deti.entities.Porter;
-import pt.ua.deti.shared.imp.ArrivalLounge;
 import pt.ua.deti.shared.imp.ArrivalTerminalExit;
 import pt.ua.deti.shared.imp.ArrivalTerminalTransferQuay;
-import pt.ua.deti.shared.imp.BaggageCollectionPoint;
 import pt.ua.deti.shared.imp.BaggageReclaimOffice;
 import pt.ua.deti.shared.imp.DepartureTerminalEntrance;
+import pt.ua.deti.shared.remote.ALRemote;
+import pt.ua.deti.shared.remote.ATERemote;
+import pt.ua.deti.shared.remote.ATTQRemote;
+import pt.ua.deti.shared.remote.BCPRemote;
+import pt.ua.deti.shared.remote.BRORemote;
+import pt.ua.deti.shared.remote.DTERemote;
 import pt.ua.deti.shared.remote.DTTQRemote;
 import pt.ua.deti.shared.remote.GRIRemote;
 import pt.ua.deti.shared.remote.PHRemote;
-import pt.ua.deti.shared.remote.TSARemote;
+import pt.ua.deti.shared.stubs.ALInterface;
+import pt.ua.deti.shared.stubs.ATEInterface;
+import pt.ua.deti.shared.stubs.ATTQInterface;
+import pt.ua.deti.shared.stubs.BCPInterface;
+import pt.ua.deti.shared.stubs.BROInterface;
+import pt.ua.deti.shared.stubs.DTEInterface;
 import pt.ua.deti.shared.stubs.DTTQInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
 import pt.ua.deti.shared.stubs.PHInterface;
-import pt.ua.deti.shared.stubs.TSAInterface;
 
 /**
  * Main execution program.
@@ -34,7 +39,7 @@ import pt.ua.deti.shared.stubs.TSAInterface;
  * @author Duarte Dias
  * @version 1.0
  */
-public class AirportConcSol {
+public class MainPassenger {
     public static void main(final String[] args) throws IOException {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
@@ -45,10 +50,6 @@ public class AirportConcSol {
         final int N = Integer.parseInt(prop.getProperty("N"));
         // Maximum number of luggage per Passenger
         final int M = Integer.parseInt(prop.getProperty("M"));
-        // Maximum number of seats on the Bus
-        final int T = Integer.parseInt(prop.getProperty("T"));
-        // The duration that the Bus driver awaits for passengers (milliseconds)
-        final long D = Long.parseLong(prop.getProperty("D"));
         // The probability of losing a piece of luggage
         final double P = Double.parseDouble(prop.getProperty("P"));
 
@@ -60,51 +61,54 @@ public class AirportConcSol {
         final String ph_host = prop.getProperty("ph_host");
         final int ph_port = Integer.parseInt(prop.getProperty("ph_port"));
 
-        // TSA Remote
-        final String tsa_host = prop.getProperty("tsa_host");
-        final int tsa_port = Integer.parseInt(prop.getProperty("tsa_port"));
-
-        // DQQT Remote
+        // DTTQ Remote
         final String dttq_host = prop.getProperty("dttq_host");
         final int dttq_port = Integer.parseInt(prop.getProperty("dttq_port"));
+
+        // ATTQ Remote
+        final String attq_host = prop.getProperty("attq_host");
+        final int attq_port = Integer.parseInt(prop.getProperty("attq_port"));
+
+        // AL Remote
+        final String al_host = prop.getProperty("al_host");
+        final int al_port = Integer.parseInt(prop.getProperty("al_port"));
+
+        // BCP Remote
+        final String bcp_host = prop.getProperty("bcp_host");
+        final int bcp_port = Integer.parseInt(prop.getProperty("bcp_port"));
+
+        // BRO Remote
+        final String bro_host = prop.getProperty("bro_host");
+        final int bro_port = Integer.parseInt(prop.getProperty("bro_port"));
+
+        // ATE Remote
+        final String ate_host = prop.getProperty("ate_host");
+        final int ate_port = Integer.parseInt(prop.getProperty("ate_port"));
+
+        // DTE Remote
+        final String dte_host = prop.getProperty("dte_host");
+        final int dte_port = Integer.parseInt(prop.getProperty("dte_port"));
 
         // Create the Information Sharing Regions
         // Remote
         final GRIInterface gri = new GRIRemote(gri_host, gri_port);
         final PHInterface ph = new PHRemote(ph_host, ph_port);
-        final TSAInterface tsa = new TSARemote(tsa_host, tsa_port);
+        
         final DTTQInterface dttq = new DTTQRemote(dttq_host, dttq_port);
-
-        // Local
-        final ArrivalLounge al = new ArrivalLounge(N);
-        final BaggageCollectionPoint bcp = new BaggageCollectionPoint(gri);
-        final BaggageReclaimOffice bro = new BaggageReclaimOffice();
-        
-        final ArrivalTerminalExit ate = new ArrivalTerminalExit(N);
-        final DepartureTerminalEntrance dte = new DepartureTerminalEntrance(N);
-        final ArrivalTerminalTransferQuay attq = new ArrivalTerminalTransferQuay(N, T, D, gri);
-        
-
-        ate.setDTE(dte);
-        dte.setATE(ate);
+        final ATTQInterface attq = new ATTQRemote(attq_host, attq_port);
+        final ALInterface al = new ALRemote(al_host, al_port);
+        final BCPInterface bcp = new BCPRemote(bcp_host, bcp_port);
+        final BROInterface bro = new BRORemote(bro_host, bro_port);
+        final ATEInterface ate = new ATERemote(ate_host, ate_port);
+        final DTEInterface dte = new DTERemote(dte_host, dte_port);
 
         // Create the list of planes
         final List<Plane> planes = createPlanes(K, N, M, P, gri, al, bcp, bro, ate, dte, attq, dttq);
 
-        // Start porter
-        final Porter porter = new Porter(al, ph, bcp, tsa, gri);
-        final Thread tporter = new Thread(porter);
-        tporter.start();
-
-        // Start bus driver
-        final BusDriver busDriver = new BusDriver(attq, dttq, ate, gri);
-        final Thread tbusdriver = new Thread(busDriver);
-        tbusdriver.start();
-
         // Get a list of planes
         for (int i = 0; i < planes.size(); i++) {
             Plane plane = planes.get(i);
-            
+
             // Update the plane information
             gri.updatePlane(plane.fn(), plane.bn());
             gri.updateBags(plane.bn());
@@ -115,7 +119,7 @@ public class AirportConcSol {
             dte.reset();
             // Load the Plane Hold
             boolean lastPlane = (i + 1) == planes.size();
-            
+
             ph.loadBags(plane.getBags(), lastPlane);
             // Star the passengers of the plane
             final List<Passenger> passengers = plane.getPassengers();
@@ -134,35 +138,36 @@ public class AirportConcSol {
             } catch (final InterruptedException e) {
                 e.printStackTrace();
             }
-           
-        }
-
-        // Wait for all entities
-        try {
-            tporter.join();
-            tbusdriver.join();
-        } catch (final InterruptedException e) {
-            e.printStackTrace();
         }
 
         try {
+            ph.close();
+            dte.close();
+            ate.close();
+            al.close();
+            bcp.close();
+            bro.close();
             dttq.close();
+            attq.close();
             gri.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Returns a {@link List} of {@link pt.ua.deti.common.Plane}s for the simulation.
+     * Returns a {@link List} of {@link pt.ua.deti.common.Plane}s for the
+     * simulation.
      * 
      * @param K    the number of {@link pt.ua.deti.common.Plane}
-     * @param N    the number of {@link pt.ua.deti.entities.Passenger} per {@link pt.ua.deti.common.Plane}
-     * @param M    the maximum number of {@link pt.ua.deti.common.Bag} per {@link pt.ua.deti.entities.Passenger}
+     * @param N    the number of {@link pt.ua.deti.entities.Passenger} per
+     *             {@link pt.ua.deti.common.Plane}
+     * @param M    the maximum number of {@link pt.ua.deti.common.Bag} per
+     *             {@link pt.ua.deti.entities.Passenger}
      * @param P    the probability of losing a bag in the trip
      * @param gri  {@link GeneralRepositoryInformation}
-     * @param al   {@link ArrivalLounge}
-     * @param bcp  {@link BaggageCollectionPoint}
+     * @param al   {@link ALInterface}
+     * @param bcp  {@link BCPInterface}
      * @param bro  {@link BaggageReclaimOffice}
      * @param ate  {@link ArrivalTerminalExit}
      * @param dte  {@link DepartureTerminalEntrance}
@@ -171,9 +176,8 @@ public class AirportConcSol {
      * @return a {@link List} of {@link pt.ua.deti.common.Plane}s for the simulation
      */
     private static List<Plane> createPlanes(final int K, final int N, final int M, final double P,
-            final GRIInterface gri, final ArrivalLounge al, final BaggageCollectionPoint bcp,
-            final BaggageReclaimOffice bro, final ArrivalTerminalExit ate, final DepartureTerminalEntrance dte,
-            final ArrivalTerminalTransferQuay attq, final DTTQInterface dttq) {
+            final GRIInterface gri, final ALInterface al, final BCPInterface bcp, final BROInterface bro,
+            final ATEInterface ate, final DTEInterface dte, final ATTQInterface attq, final DTTQInterface dttq) {
         final ArrayList<Plane> planes = new ArrayList<>(K);
         int globalBagId = 0;
 

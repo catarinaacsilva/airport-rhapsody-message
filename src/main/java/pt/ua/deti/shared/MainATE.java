@@ -5,39 +5,39 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pt.ua.deti.common.Bag;
 import pt.ua.deti.common.MessageReply;
 import pt.ua.deti.common.MessageRequest;
 import pt.ua.deti.common.Utils;
-import pt.ua.deti.shared.imp.PlaneHold;
-import pt.ua.deti.shared.remote.GRIRemote;
-import pt.ua.deti.shared.stubs.GRIInterface;
-import pt.ua.deti.shared.stubs.PHInterface;
+import pt.ua.deti.shared.imp.ArrivalTerminalExit;
+import pt.ua.deti.shared.remote.DTERemote;
+import pt.ua.deti.shared.stubs.ATEInterface;
+import pt.ua.deti.shared.stubs.DTEInterface;
 
 /**
- * {@link PlaneHold} Server.
+ * {@link ATEInterface} Server.
  * 
  * @author Catarina Silva
  * @author Duarte Dias
  * @version 1.0
  */
-public class MainPH {
+public class MainATE {
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
+        // The number of Passengers per Plane
+        final int N = Integer.parseInt(prop.getProperty("N"));
+        // DTE Remote
+        final String dte_host = prop.getProperty("dte_host");
+        final int dte_port = Integer.parseInt(prop.getProperty("dte_port"));
         // Server port
-        final int port = Integer.parseInt(prop.getProperty("ph_port"));
-        // GRI Remote
-        final String gri_host = prop.getProperty("gri_host");
-        final int gri_port = Integer.parseInt(prop.getProperty("gri_port"));
+        final int port = Integer.parseInt(prop.getProperty("ate_port"));
 
         // Create the Shared Region
-        final GRIInterface gri = new GRIRemote(gri_host, gri_port);
-        final PHInterface ph = new PlaneHold(gri);
+        final DTEInterface dte = new DTERemote(dte_host, dte_port);
+        final ATEInterface ate = new ArrivalTerminalExit(N, dte);
 
         // Stopping criteria
         final AtomicInteger done = new AtomicInteger(0);
@@ -47,20 +47,20 @@ public class MainPH {
             final ServerSocket serverSocket = new ServerSocket(port);
             serverSocket.setSoTimeout(1000);
 
-            // Serve all the clients (Porter, Passenger)
+            // Serve all the clients (Bus Driver, Passenger)
             while (done.get() < 2) {
                 try {
-                    final Handler handler = new Handler(serverSocket.accept(), ph, done);
+                    final Handler handler = new Handler(serverSocket.accept(), ate, done);
                     final Thread thread = new Thread(handler);
                     thread.start();
-                } catch(SocketTimeoutException e) {
-                    //ignore, used to check the stopping criteria
+                } catch (SocketTimeoutException e) {
+                    // ignore, used to check the stopping criteria
                 }
             }
 
             // Close the server socket
             serverSocket.close();
-            
+
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -71,16 +71,16 @@ public class MainPH {
      */
     static class Handler implements Runnable {
         private final Socket socket;
-        private final PHInterface ph;
+        private final ATEInterface ate;
         private final AtomicInteger done;
 
         /**
          * 
          * @param socket
          */
-        Handler(final Socket socket, final PHInterface ph, final AtomicInteger done) {
+        Handler(final Socket socket, final ATEInterface ate, final AtomicInteger done) {
             this.socket = socket;
-            this.ph = ph;
+            this.ate = ate;
             this.done = done;
         }
 
@@ -97,28 +97,27 @@ public class MainPH {
 
                 // Check the message type and execute the corresponding method
                 switch (request.type) {
-                    case "ph_close":
+                    case "ate_close":
                         // Instead of closing the log it marks the task as done
                         done.incrementAndGet();
                         reply = new MessageReply(request.type);
                         break;
-                    case "ph_loadBags":
-                        List<Bag> bags = Utils.cast(request.argObj);
-                        boolean lastPlane = request.argBool;
-                        ph.loadBags(bags, lastPlane);
+                    case "ate_reset":
+                        ate.reset(request.argBool);
                         reply = new MessageReply(request.type);
                         break;
-                    case "ph_getBag":
-                        reply = new MessageReply(request.type, 0, ph.getBag());
+                    case "ate_goHome":
+                        ate.goHome(request.argInt0);
+                        reply = new MessageReply(request.type);
                         break;
-                    case "ph_hasBags":
-                        reply = new MessageReply(request.type, ph.hasBags());
+                    case "ate_getBlocked":
+                        reply = new MessageReply(request.type, 0, ate.getBlocked());
                         break;
-                    case "ph_lastPlane":
-                        reply = new MessageReply(request.type, ph.lastPlane());
+                    case "ate_hasDaysWorkEnded":
+                        reply = new MessageReply(request.type, ate.hasDaysWorkEnded());
                         break;
                     default:
-                        reply = new MessageReply(request.type, -1, "unknown method");
+                        reply = new MessageReply(request.type, -1, "unknown method: " + request.type);
                         break;
                 }
 

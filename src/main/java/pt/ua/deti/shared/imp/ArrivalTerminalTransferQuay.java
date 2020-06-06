@@ -1,5 +1,6 @@
 package pt.ua.deti.shared.imp;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
@@ -49,8 +50,7 @@ public class ArrivalTerminalTransferQuay implements ATTQInterface {
      *                    (milliseconds)
      * @param gri         {@link GeneralRepositoryInformation} serves as log
      */
-    public ArrivalTerminalTransferQuay(final int N, final int numberSeats, final long D,
-            final GRIInterface gri) {
+    public ArrivalTerminalTransferQuay(final int N, final int numberSeats, final long D, final GRIInterface gri) {
         this.numberSeats = numberSeats;
         this.D = D;
         pConds = new Condition[N];
@@ -134,5 +134,10 @@ public class ArrivalTerminalTransferQuay implements ATTQInterface {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        // Used for the remote version
     }
 }

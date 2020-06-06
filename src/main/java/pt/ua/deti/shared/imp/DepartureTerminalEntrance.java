@@ -1,10 +1,14 @@
 package pt.ua.deti.shared.imp;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import pt.ua.deti.shared.stubs.ATEInterface;
+import pt.ua.deti.shared.stubs.DTEInterface;
 
 /**
  * Departure Terminal Entrance.
@@ -27,7 +31,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Duarte Dias
  * @version 1.0
  */
-public class DepartureTerminalEntrance {
+public class DepartureTerminalEntrance implements DTEInterface {
     /** {@link Lock} used by the entities to change the internal state */
     private final Lock lock = new ReentrantLock();
     /** {@link Condition} used by the passenger to check again for bags */
@@ -39,8 +43,8 @@ public class DepartureTerminalEntrance {
     private final AtomicInteger blocked = new AtomicInteger(0);
     /** Total number of {@link pt.ua.deti.entities.Passenger} */
     private final int total;
-    /** {@link ArrivalTerminalExit} */
-    private ArrivalTerminalExit ate;
+    /** {@link ATEInterface} */
+    private ATEInterface ate;
 
     /**
      * Create a {@link DepartureTerminalEntrance}.
@@ -49,20 +53,30 @@ public class DepartureTerminalEntrance {
      */
     public DepartureTerminalEntrance(final int total) {
         this.total = total;
+        this.ate = null;
     }
 
     /**
-     * Define the other exit point (@{link ArrivalTerminalExit}).
+     * Create a {@link DepartureTerminalEntrance}.
      * 
-     * @param ate the other exit point (@{link ArrivalTerminalExit})
+     * @param total total number of {@link pt.ua.deti.entities.Passenger}
+     * @param ate the other exit point (@{link ATEInterface})
      */
-    public void setATE(final ArrivalTerminalExit ate) {
+    public DepartureTerminalEntrance(final int total, ATEInterface ate) {
+        this.total = total;
         this.ate = ate;
     }
 
     /**
-     * Reset the {@link DepartureTerminalEntrance} by setting the blocked to 0.
+     * Define the other exit point (@{link ATEInterface}).
+     * 
+     * @param ate the other exit point (@{link ATEInterface})
      */
+    public void setATE(final ATEInterface ate) {
+        this.ate = ate;
+    }
+
+    @Override
     public void reset() {
         lock.lock();
         try {
@@ -72,11 +86,7 @@ public class DepartureTerminalEntrance {
         }
     }
 
-    /**
-     * Prepare next leg.
-     * 
-     * @param id the identification of the Passenger
-     */
+    @Override
     public void prepareNextLeg(final int id) {
         lock.lock();
         try {
@@ -92,12 +102,13 @@ public class DepartureTerminalEntrance {
         }
     }
 
-    /**
-     * Returns the number of blocked {@link pt.ua.deti.entities.Passenger}.
-     * 
-     * @return the number of blocked {@link pt.ua.deti.entities.Passenger}
-     */
+    @Override
     public int getBlocked() {
         return blocked.get();
+    }
+
+    @Override
+    public void close() throws IOException {
+        // Used for the remote version
     }
 }

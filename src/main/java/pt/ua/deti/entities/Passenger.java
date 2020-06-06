@@ -3,12 +3,12 @@ package pt.ua.deti.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.ua.deti.shared.imp.ArrivalLounge;
-import pt.ua.deti.shared.imp.ArrivalTerminalExit;
-import pt.ua.deti.shared.imp.ArrivalTerminalTransferQuay;
-import pt.ua.deti.shared.imp.BaggageCollectionPoint;
-import pt.ua.deti.shared.imp.BaggageReclaimOffice;
-import pt.ua.deti.shared.imp.DepartureTerminalEntrance;
+import pt.ua.deti.shared.stubs.ALInterface;
+import pt.ua.deti.shared.stubs.ATEInterface;
+import pt.ua.deti.shared.stubs.ATTQInterface;
+import pt.ua.deti.shared.stubs.BCPInterface;
+import pt.ua.deti.shared.stubs.BROInterface;
+import pt.ua.deti.shared.stubs.DTEInterface;
 import pt.ua.deti.shared.stubs.DTTQInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
 
@@ -21,7 +21,7 @@ import pt.ua.deti.shared.stubs.GRIInterface;
  */
 public class Passenger implements Runnable {
     /**
-     * States that descibre the life cycle of a
+     * States that describe the life cycle of a
      * {@link pt.ua.deti.entities.Passenger}
      */
     protected static enum State {
@@ -52,23 +52,23 @@ public class Passenger implements Runnable {
     private State state;
     /** {@link Situation} of the {@link pt.ua.deti.entities.Passenger} */
     private final Situation situation;
-    /** represents the id of this passenger */
+    /** represents the id of this {@link pt.ua.deti.entities.Passenger} */
     private final int id;
-    /** {@link ArrivalLounge} */
-    private final pt.ua.deti.shared.imp.ArrivalLounge al;
-    /** {@link BaggageCollectionPoint} */
-    private final pt.ua.deti.shared.imp.BaggageCollectionPoint bcp;
-    /** {@link BaggageReclaimOffice} */
-    private final BaggageReclaimOffice bro;
-    /** {@link ArrivalTerminalExit} */
-    private final ArrivalTerminalExit ate;
-    /** {@link DepartureTerminalEntrance} */
-    private final DepartureTerminalEntrance dte;
-    /** {@link ArrivalTerminalTransferQuay} */
-    private final ArrivalTerminalTransferQuay attq;
+    /** {@link ALInterface} */
+    private final ALInterface al;
+    /** {@link BCPInterface} */
+    private final BCPInterface bcp;
+    /** {@link BROInterface} */
+    private final BROInterface bro;
+    /** {@link ATEInterface} */
+    private final ATEInterface ate;
+    /** {@link DTEInterface} */
+    private final DTEInterface dte;
+    /** {@link ATTQInterface} */
+    private final ATTQInterface attq;
     /** {@link DTTQInterface} */
     private final DTTQInterface dttq;
-    /** {@link GeneralRepositoryInformation} serves as log */
+    /** {@link GRIInterface} serves as log */
     private final GRIInterface gri;
     /** Flag used to indicate if the life cycle is done */
     private boolean done = false;
@@ -80,19 +80,18 @@ public class Passenger implements Runnable {
      * @param bagsId  {@link List} with all the ids from its bags
      * @param transit flags if the {@link pt.ua.deti.entities.Passenger} is in
      *                transit
-     * @param al      {@link ArrivalLounge}
-     * @param bcp     {@link BaggageCollectionPoint}
-     * @param bro     {@link BaggageReclaimOffice}
-     * @param ate     {@link ArrivalTerminalExit}
-     * @param dte     {@link DepartureTerminalEntrance}
-     * @param attq    {@link ArrivalTerminalTransferQuay}
-     * @param dttq    {@link DepartureTerminalTransferQuay}
-     * @param gri     {@link GeneralRepositoryInformation} serves as log
+     * @param al      {@link ALInterface}
+     * @param bcp     {@link BCPInterface}
+     * @param bro     {@link BROInterface}
+     * @param ate     {@link ATEInterface}
+     * @param dte     {@link DTEInterface}
+     * @param attq    {@link ATTQInterface}
+     * @param dttq    {@link DTTQInterface}
+     * @param gri     {@link GRIInterface} serves as log
      */
-    public Passenger(final int id, final List<Integer> bagsId, final boolean transit, final ArrivalLounge al,
-            final BaggageCollectionPoint bcp, final BaggageReclaimOffice bro, final ArrivalTerminalExit ate,
-            final DepartureTerminalEntrance dte, final ArrivalTerminalTransferQuay attq,
-            final DTTQInterface dttq, final GRIInterface gri) {
+    public Passenger(final int id, final List<Integer> bagsId, final boolean transit, final ALInterface al,
+            final BCPInterface bcp, final BROInterface bro, final ATEInterface ate, final DTEInterface dte,
+            final ATTQInterface attq, final DTTQInterface dttq, final GRIInterface gri) {
         this.bagsId = bagsId;
         this.id = id;
         state = State.AT_THE_DISEMBARKING_ZONE;

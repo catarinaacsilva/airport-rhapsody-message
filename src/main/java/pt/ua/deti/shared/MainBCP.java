@@ -5,39 +5,37 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pt.ua.deti.common.Bag;
 import pt.ua.deti.common.MessageReply;
 import pt.ua.deti.common.MessageRequest;
 import pt.ua.deti.common.Utils;
-import pt.ua.deti.shared.imp.PlaneHold;
+import pt.ua.deti.shared.imp.BaggageCollectionPoint;
 import pt.ua.deti.shared.remote.GRIRemote;
+import pt.ua.deti.shared.stubs.BCPInterface;
 import pt.ua.deti.shared.stubs.GRIInterface;
-import pt.ua.deti.shared.stubs.PHInterface;
 
 /**
- * {@link PlaneHold} Server.
+ * {@link BCPInterface} Server.
  * 
  * @author Catarina Silva
  * @author Duarte Dias
  * @version 1.0
  */
-public class MainPH {
+public class MainBCP {
     public static void main(final String[] args) {
         // Read the configuration file
         final Properties prop = Utils.loadProperties("config.properties");
         // Server port
-        final int port = Integer.parseInt(prop.getProperty("ph_port"));
+        final int port = Integer.parseInt(prop.getProperty("bcp_port"));
         // GRI Remote
         final String gri_host = prop.getProperty("gri_host");
         final int gri_port = Integer.parseInt(prop.getProperty("gri_port"));
 
         // Create the Shared Region
         final GRIInterface gri = new GRIRemote(gri_host, gri_port);
-        final PHInterface ph = new PlaneHold(gri);
+        final BCPInterface bcp = new BaggageCollectionPoint(gri);
 
         // Stopping criteria
         final AtomicInteger done = new AtomicInteger(0);
@@ -50,17 +48,17 @@ public class MainPH {
             // Serve all the clients (Porter, Passenger)
             while (done.get() < 2) {
                 try {
-                    final Handler handler = new Handler(serverSocket.accept(), ph, done);
+                    final Handler handler = new Handler(serverSocket.accept(), bcp, done);
                     final Thread thread = new Thread(handler);
                     thread.start();
-                } catch(SocketTimeoutException e) {
-                    //ignore, used to check the stopping criteria
+                } catch (SocketTimeoutException e) {
+                    // ignore, used to check the stopping criteria
                 }
             }
 
             // Close the server socket
             serverSocket.close();
-            
+
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -71,16 +69,16 @@ public class MainPH {
      */
     static class Handler implements Runnable {
         private final Socket socket;
-        private final PHInterface ph;
+        private final BCPInterface bcp;
         private final AtomicInteger done;
 
         /**
          * 
          * @param socket
          */
-        Handler(final Socket socket, final PHInterface ph, final AtomicInteger done) {
+        Handler(final Socket socket, final BCPInterface bcp, final AtomicInteger done) {
             this.socket = socket;
-            this.ph = ph;
+            this.bcp = bcp;
             this.done = done;
         }
 
@@ -97,25 +95,25 @@ public class MainPH {
 
                 // Check the message type and execute the corresponding method
                 switch (request.type) {
-                    case "ph_close":
+                    case "bcp_close":
                         // Instead of closing the log it marks the task as done
                         done.incrementAndGet();
                         reply = new MessageReply(request.type);
                         break;
-                    case "ph_loadBags":
-                        List<Bag> bags = Utils.cast(request.argObj);
-                        boolean lastPlane = request.argBool;
-                        ph.loadBags(bags, lastPlane);
+                    case "bcp_reset":
+                        bcp.reset();
                         reply = new MessageReply(request.type);
                         break;
-                    case "ph_getBag":
-                        reply = new MessageReply(request.type, 0, ph.getBag());
+                    case "bcp_noMoreBags":
+                        bcp.noMoreBags();
+                        reply = new MessageReply(request.type);
                         break;
-                    case "ph_hasBags":
-                        reply = new MessageReply(request.type, ph.hasBags());
+                    case "bcp_goCollectBag":
+                        reply = new MessageReply(request.type, bcp.goCollectBag(request.argInt0));
                         break;
-                    case "ph_lastPlane":
-                        reply = new MessageReply(request.type, ph.lastPlane());
+                    case "bcp_storeBag":
+                        bcp.storeBag(Utils.cast(request.argObj));
+                        reply = new MessageReply(request.type);
                         break;
                     default:
                         reply = new MessageReply(request.type, -1, "unknown method");
