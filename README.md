@@ -141,7 +141,11 @@ The script will run 10 simulation in order to stress test the code. If you want,
 ./run.sh 3
 ```
 
+
 ## Authors
 
-- **Catarina Silva**
-- **Duarte Dias**
+* **Catarina Silva** - [catarinaacsilva](https://github.com/catarinaacsilva)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
